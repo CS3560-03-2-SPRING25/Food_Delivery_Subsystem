@@ -1,130 +1,233 @@
-// In your choice of programming language, develop your system classes' skeleton. Make sure to include attributes and their types. (10 Pts.)
-// Think about use cases and develop your methods skeleton, think carefully about each method's input parameters and returned output (if any). (10 Pts.)
-// Comment all your codes meaningfully.
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.List;
 
-
+// Abstract class representing users
 public abstract class User {
-  String name;
-  String phoneNumber;
-  String email;
+    private String name;
+    private String phoneNumber;
+    private String email;
+    
+    public User(String name, String phoneNumber, String email) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+    }
+    
+    public String getName() {
+        return name; 
+    }
 
-  public User(String name, String email) {
-      // ...
-  }
+    public String getPhoneNumber() {
+        return phoneNumber; 
+    }
 
-  public String getName() {
-      // ...
-  }
-
-  public String getPhoneNumber() {
-       // ...
-  }
-
-  public String getEmail() {
-      // ...
-  }
-  
+    public String getEmail() {
+        return email; 
+    }
 }
 
-
+// Customer class extending User for placing orders
 public class Customer extends User {
-  int customerID; // Can be UUID
-  String address;
-  
-  public Customer(String name, String email, int customerID, String address) {
-      super(name, email);
-      // ...
-  }
+    private int customerId;
+    private String address;
+    
+    public Customer(int customerId, String name, String phoneNumber, String email, String address) {
+        super(name, phoneNumber, email);
+        this.customerId = customerId;
+        this.address = address;
+    }
+    
+    public int getCustomerId() {
+        return customerId; 
+    }
 
-  public String getAddress() {
-      // ...
-  }
+    public String getAddress() {
+        return address; 
+    }
 }
 
+// Restaurant worker class for creating orders
 public class RestaurantWorker extends User {
-  int restaurantWorkerID; // Can be UUID
-  
-  public RestaurantWorker(String name, String email, int restaurantWorkerID) {
-      super(name, email);
-      // ...
-  }
+    private int restaurantWorkerId;
+    
+    public RestaurantWorker(int restaurantWorkerId, String name, String phoneNumber, String email) {
+        super(name, phoneNumber, email);
+        this.restaurantWorkerId = restaurantWorkerId;
+    }
+    
+    public int getRestaurantWorkerId() {
+        return restaurantWorkerId; 
+    }
 }
 
+// Delivery driver class responsible for deliveries
 public class Driver extends User {
-  int driverID; // Can be UUID
-  String status;
-  List<Order> assignedOrders;
-  List<Review> reviews;
-  
-  public Driver(String name, String email, int driverID, String status, List<Order> assignedOrders, List<Review> reviews) {
-      super(name, email);
-      // ...
-  }
+    private int driverId;
+    private String status;
+    private List<Integer> assignedOrders;
+    private double rating;
+    
+    public Driver(int driverId, String name, String phoneNumber, String email, String status, List<Integer> assignedOrders, double rating) {
+        super(name, phoneNumber, email);
+        this.driverId = driverId;
+        this.status = status;
+        this.assignedOrders = assignedOrders;
+        this.rating = rating;
+    }
+    
+    public int getDriverId() {
+        return driverId; 
+    }
 
-  public String getStatus() {
-      // ...
-  }
+    public String getStatus() {
+        return status;
+    }
 
-  public void setStatus(String status) {
-      // ...
-  }
+    public List<Integer> getAssignedOrders() {
+        return assignedOrders;
+    }
+    
+    public double getRating() {
+        return rating;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
 }
 
+// Car class for vehicle used by a delivery driver
 public class Car {
-  int carID; // Can be UUID
-  String make;
-  String model;
-  String licensePlate;
+    private int carId;
+    private String make;
+    private String model;
+    private String licensePlate;
+    
+    public Car(int carId, String make, String model, String licensePlate) {
+        this.carId = carId;
+        this.make = make;
+        this.model = model;
+        this.licensePlate = licensePlate;
+    }
+    
+    public int getCarId() {
+        return carId;
+    }
 
-  public Car(int carID, String make, String model, String licensePlate) {
-      // ...
-  }
+    public String getMake() {
+        return make;
+    }
 
-  public String getMake() {
-      // ...
-  }
+    public String getModel() {
+        return model;
+    }
 
-  public String getModel() {
-       // ...
-  } 
+    public String getLicensePlate() { 
+        return licensePlate;
+    }
 }
 
-public class Delivery {
-  int deliveryID; // Can be UUID
-  Duration deliveryTime; // Can be LocalDateTime 
-  String deliveryStatus; 
-  
-  public Delivery(int deliveryID, Duration deliveryTime, String deliveryStatus) {
-      // ...
-  }
-
-  // We can also calculate this based on the time the order was completed... 
-  public Duration getDeliveryTime() {
-      // ...
-  }
-
-  // Can be calculated based on the time the order was placed
-  public Duration getEstimatedTime() {
-      // ...
-  }
-
-  public void setEstimatedTime(Duration estimatedTime) {
-    // ...
-  }
-}
-
+// Order class representing a food order
 public class Order {
-  int orderID; // Can be UUID
-  List<String> orderItems; 
-  LocalDateTime orderTime;
-  String orderStatus;
-  
-  public Order(int orderID, List<String> orderItems, LocalDateTime orderTime, String orderStatus) {
-      // ...
-  }
+    private int orderId;
+    private List<String> orderItems;
+    private LocalDateTime orderTime;
+    private String orderStatus;
+    
+    public Order(int orderId, List<String> orderItems, LocalDateTime orderTime, String orderStatus) {
+        this.orderId = orderId;
+        this.orderItems = orderItems;
+        this.orderTime = orderTime;
+        this.orderStatus = orderStatus;
+    }
+    
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public List<String> getOrderItems() {
+        return orderItems;
+    }
+
+    public LocalDateTime getOrderTime() {
+        return orderTime;
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 
 }
 
+// Delivery class for delivery details
+public class Delivery {
+    private int deliveryId; 
+    private Duration estimatedTime;
+    private Duration deliveryTime;
+    private String deliveryStatus;
 
+    public Delivery(int deliveryId, Duration estimatedTime, Duration deliveryTime, String deliveryStatus) {
+        this.deliveryId = deliveryId;
+        this.estimatedTime = estimatedTime;
+        this.deliveryTime = deliveryTime;
+        this.deliveryStatus = deliveryStatus;
+    }
 
+    public int getDeliveryId() {
+        return deliveryId;
+    }
 
+    public Duration getDeliveryTime() {
+        return deliveryTime;
+    }
+
+    public Duration getEstimatedTime() {
+        return estimatedTime;
+    }
+
+    public String getDeliveryStatus() {
+        return deliveryStatus;
+    }
+
+    public void setEstimatedTime(Duration estimatedTime) {
+        this.estimatedTime = estimatedTime;
+    }
+
+    public void setDeliveryStatus(String deliveryStatus) {
+        this.deliveryStatus = deliveryStatus;
+    }
+}
+
+// Review class for storing customer reviews
+public class Review {
+    private int reviewId;
+    private String comments;
+    private int rating;
+    
+    public Review(int reviewId, String comments, int rating) {
+        this.reviewId = reviewId;
+        this.comments = comments;
+        this.rating = rating;
+    }
+    
+    public int getReviewId() {
+        return reviewId;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+}

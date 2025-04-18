@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Driver Dashboard</title>
+</head>
+<body>
+  <h2>All Orders</h2>
+  <div id="orders"></div>
+
+  <script>
+    // Fetch all orders
+    fetch('http://localhost:8080/orders')
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('orders');
+        data.forEach(order => {
+          const div = document.createElement('div');
+          div.innerHTML = `
+            <p><strong>Order ID:</strong> ${order.orderId}</p>
+            <p><strong>Food:</strong> ${order.orderItems}</p>
+            <p><strong>Address:</strong> ${order.address}</p>
+            <p><strong>Status:</strong> <span id="status-${order.orderId}">${order.orderStatus}</span></p>
+            <button onclick="markDelivered(${order.orderId})">Mark as Delivered</button>
+            <hr>
+          `;
+          container.appendChild(div);
+        });
+      });
+
+    function markDelivered(orderId) {
+      fetch(`http://localhost:8080/orders/${orderId}/status`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ status: "Delivered" })
+      })
+      .then(() => {
+        document.getElementById(`status-${orderId}`).innerText = "Delivered";
+        alert(`Order ${orderId} marked as delivered.`);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -11,6 +11,23 @@ import java.util.List;
 import fooddelivery.DBConnection;
 
 public class DriverDAO {
+	
+	public boolean createDriver(Driver driver) {
+	    String query = "INSERT INTO drivers (driver_id, status, rating) VALUES (?, ?, ?)";
+	    try (Connection conn = DBConnection.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(query)) {
+
+	        stmt.setInt(1, driver.getUserId()); // Assuming userId is already set
+	        stmt.setString(2, driver.getStatus());
+	        stmt.setDouble(3, driver.getRating());
+
+	        return stmt.executeUpdate() > 0;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+
 
     public Driver getDriverById(int driverId) {
         Driver driver = null;
@@ -32,7 +49,7 @@ public class DriverDAO {
 
                 List<Integer> assignedOrders = getAssignedOrders(driverId, conn);
                 
-                driver = new Driver(userId, name, phone, email, status, assignedOrders, rating);
+//                driver = new Driver(userId, name, phone, email, status, assignedOrders, rating);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -41,7 +58,7 @@ public class DriverDAO {
         return driver;
     }
 
-    public List<Integer> getAssignedOrders(int driverId, Connection conn) {
+    public static List<Integer> getAssignedOrders(int driverId, Connection conn) {
         List<Integer> orderIds = new ArrayList<>();
         String sql = "SELECT order_id FROM orders WHERE driver_id = ?";
 
@@ -94,8 +111,8 @@ public class DriverDAO {
 
                 List<Integer> assignedOrders = getAssignedOrders(id, conn);
 
-                Driver driver = new Driver(id, name, phone, email, status, assignedOrders, rating);
-                availableDrivers.add(driver);
+//                Driver driver = new Driver(id, name, phone, email, status, assignedOrders, rating);
+//                availableDrivers.add(driver);
             }
         } catch (SQLException e) {
             e.printStackTrace();

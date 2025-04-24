@@ -20,6 +20,8 @@ public class DeliveryDAO {
 //            stmt.setString(3, delivery.getStatus());
 //            stmt.setTimestamp(4, new Timestamp(delivery.getStartTime().getTime()));
 //            stmt.setTimestamp(5, new Timestamp(delivery.getFinishTime().getTime()));
+        	
+        	
             
             return stmt.executeUpdate() > 0; // Returns true if delivery is created
         } catch (SQLException e) {

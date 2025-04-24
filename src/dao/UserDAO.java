@@ -5,36 +5,43 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 //import java.util.List;
 import java.util.List;
 
 import fooddelivery.DBConnection;
+import model.Customer;
 import model.Driver;
 import model.RestaurantWorker;
-import model.Customer;
 import model.User;
 
 public class UserDAO {
-	public boolean createUser(User user) {
-	    String sql = "INSERT INTO users (name, email, phone_number, password) VALUES (?, ?, ?, ?)";
-	    String hashedPassword = user.getPassword();
+	public int createUser(User user) {
+	    String sql = "INSERT INTO users (name, email, phone_number, password, role) VALUES (?, ?, ?, ?, ?)";
 	    
 	    try (Connection conn = DBConnection.getConnection(); 
-	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+	         PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+	    	String hashedPassword = user.getPassword(); // TODO: use hashed password
 	        
 	        stmt.setString(1, user.getName());
 	        stmt.setString(2, user.getEmail());
 	        stmt.setString(3, user.getPhoneNumber());
 	        stmt.setString(4, hashedPassword); 
-
-	        int rowsAffected = stmt.executeUpdate();
-	        return rowsAffected > 0;
+	        stmt.setString(5, user.getRole());
+	        
+	        stmt.executeUpdate();
+	        
+	     // Get generated user_id
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getInt(1); // Return the generated user_id
+                }
+            }
 	        
 	    } catch (SQLException e) {
-	        e.printStackTrace();
+	    	 e.printStackTrace();
 	    }
-	    
-	    return false;
+	    return -1;
 	}
 	
 
@@ -48,34 +55,41 @@ public class UserDAO {
 	        stmt.setString(2, password);
 
 	        ResultSet rs = stmt.executeQuery();
-	        
+	    
 	        if (rs.next()) {
+	        	String role = rs.getString("role"); // check role
 	        	String storedHashedPassword = rs.getString("password");
-	           
 	        	
+//	            System.out.println(role);
+	        	// TODO: check email???
 	        	// Check if the provided password matches the stored hashed password
-                if (password == storedHashedPassword) { // BCrypt.checkpw(password, storedHashedPassword)
+	        	// BCrypt.checkpw(password, storedHashedPassword)
+                if (password.equals(storedHashedPassword)) { 
+                	  System.out.println("password matches!!!");
                     int userId = rs.getInt("user_id");
                     String name = rs.getString("name");
-                    String phoneNumber = rs.getString("phone_number");
-                    String userEmail = rs.getString("email");
-                    String status = rs.getString("status");
-                    double rating = rs.getDouble("rating");   
-                    
-                   
-                    
-                 // Check if it's a Driver or Customer 
-                    if (status != null) { // status means Driver (need to change this)
-                    	// Get assigned orders from the driver_orders table
-                        // List<Integer> assignedOrders = getAssignedOrders();
-                    	 List<Integer> assignedOrders = getAssignedOrders(userId, conn);
-                    	return new Driver(userId, name, phoneNumber, userEmail, storedHashedPassword, status, rating);
-                    } else {
-                        // Create a Customer or other User type
-                        return new Customer(userId, name, phoneNumber, userEmail, storedHashedPassword); 
+                    String phone = rs.getString("phone_number");
+
+                    switch (role.toLowerCase()) {
+                    case "driver":
+                    	String status = rs.getString("status");
+                    	double rating = rs.getDouble("rating");
+                    	// get driver from DB using id
+                    	List<Integer> assignedOrders = DriverDAO.getAssignedOrders(userId, conn);
+                        return Driver.existingDriverFromDB(userId, name, phone, email, password, status, assignedOrders, rating);
+                    case "customer":
+                        return Customer.existingCustomerFromDB(userId, name, phone, email, password);
+                    case "restaurant_worker":
+                    	String shiftStatus = rs.getString("shift_status"); 
+//                        return RestaurantWorker.existingWorkerFromDB(userId, name, phone, email, password, shiftStatus);
+                    default:
+                        return null;
                     }
+                    
+                    // do we need the password?
+                    // return new User(userId, name, phoneNumber, userEmail, storedHashedPassword);
                 } else {
-                    System.out.println("Invalid password.");
+                    System.out.println("Invalid Credentials.");
                 }
                 
 	        }

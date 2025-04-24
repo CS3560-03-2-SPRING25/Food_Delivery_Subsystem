@@ -3,55 +3,47 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
+import dao.CustomerDAO;
 import dao.DriverDAO;
+import dao.RestaurantWorkerDAO;
+import dao.UserDAO;
+import model.Customer;
+import model.Driver;
+import model.User;
+import model.RestaurantWorker;
 
 public class Main {
-	public static void main(String[] args) {
+	public static void main(String[] args) {		
+
+//    	String name = "Restaurant Worker";
+//      String phone = "111-222-3333";
+//      String email = "restaurant.worker@gmail.com";
+//      String password = "workerPassword";
+//      String accountType = "Driver";  // based on user selection
+//      String accountType = "Customer";  
+//      String accountType = "Restaurant_worker"; 
 		
-//		try (Connection connection = DBConnection.getConnection()) {
-//            Statement statement = connection.createStatement();
-//            String query = "SELECT * FROM users";
-//            ResultSet resultSet = statement.executeQuery(query);
-//           
-//            while (resultSet.next()) {
-//                int userId = resultSet.getInt("user_id");
-//                String name = resultSet.getString("name");
-//                String phone = resultSet.getString("phone_number");
-//                String email = resultSet.getString("email");
-//                String role = resultSet.getString("role");
-//           
-//                System.out.println("ID: " + userId +
-//                                   ", Name: " + name +
-//                                   ", Phone: " + phone +
-//                                   ", Email: " + email +
-//                                   ", Role: " + role);
-//            }
-//            
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-		
-		
-		 try {
-	            Connection conn = DBConnection.getConnection(); // establish DB connection
+		AuthService authService = new AuthService();
 
-	            DriverDAO driverDAO = new DriverDAO(); // DAO object
-	            int driverId = 1; // test with an existing driver ID
+        // Signup
+//        boolean success = authService.signup("Alex", "alex@example.com", "1234567890", "secret123", "driver");
+//        System.out.println(success ? "Signup success!" : "Signup failed.");
 
-	            List<Integer> assignedOrders = driverDAO.getAssignedOrders(driverId, conn);
+//         Login
+        User user = authService.login("alex@example.com", "secret123");
+        if (user != null) {
+            System.out.println("Login success: " + user.getName());
 
-	            System.out.println("Assigned Orders for Driver ID " + driverId + ":");
-	            for (int orderId : assignedOrders) {
-	                System.out.println("Order ID: " + orderId);
-	            }
-
-	            conn.close(); // always close connection when done
-
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
+            if (user instanceof Driver) {
+                System.out.println("Welcome, driver!");
+            }
+        } else {
+            System.out.println("Login failed.");
+        }
 		
 	}
 

@@ -1,29 +1,36 @@
 package model;
 
-//Abstract class representing users
-public abstract class User {
+public class User {
 	 private int userId;
 	 private String name;
 	 private String phoneNumber;
 	 private String email;
 	 private String password;
+	 protected String role;
 
-	 // Constructor with password for creating new users (sign up)
-	public User(int userId, String name, String phoneNumber, String email, String password) {
+	public User(int userId, String name, String phoneNumber, String email, String password, String role) {
 	    this.userId = userId;
 	    this.name = name;
 	    this.phoneNumber = phoneNumber;
 	    this.email = email;
 	    this.password = password;
+	    this.role = role;
 	}
 	
-	// Constructor without password (for fetching user details from DB)
-	public User(int userId, String name, String phoneNumber, String email) {
-	    this.userId = userId;
-	    this.name = name;
-	    this.phoneNumber = phoneNumber;
-	    this.email = email;
-	}
+	// Static Factory Method
+	private User(String name, String email, String phoneNumber, String password, String role) {
+        this(0, name, email, phoneNumber, password, role); // 0 or a placeholder for new users
+    }
+	
+	// Static Factory Method
+    public static User newUserForSignup(String name, String email, String phoneNumber, String password, String role) {
+        return new User(name, email, phoneNumber, password, role);
+    }
+    
+	// Static Factory Method
+    public static User existingUserFromDB(int userId, String name, String email, String phoneNumber, String password, String role) {
+        return new User(userId, name, email, phoneNumber, password, role);
+    }
 	 
 	 public int getUserId() {
 		 return userId;
@@ -53,6 +60,10 @@ public abstract class User {
 	     return email; 
 	 }
 	 
+	 public String getRole() {
+	     return role; 
+	 }
+	 
 	 public void setEmail(String email) {
 	     this.email = email;
 	 }
@@ -63,5 +74,9 @@ public abstract class User {
 	
 	 public void setPassword(String password) {
 	     this.password = password;
+	 }
+	 
+	 public void setRole(String role) {
+	     this.role = role;
 	 }
 }

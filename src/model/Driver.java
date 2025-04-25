@@ -3,6 +3,8 @@ package model;
 //import java.sql.Connection;
 //import java.util.ArrayList;
 import java.util.List;
+import constants.UserRoles;
+
 
 //Delivery driver class responsible for deliveries
 public class Driver extends User {
@@ -11,7 +13,7 @@ public class Driver extends User {
 	 private double rating;
 	 
 	 public Driver(int userId, String name, String phoneNumber, String email, String password, String status, List<Integer> assignedOrders, double rating) {
-	     super(userId, name, phoneNumber, email, password, "driver");
+	     super(userId, name, phoneNumber, email, password, UserRoles.DRIVER);
 	     this.status = status;
 	     this.assignedOrders = assignedOrders;
 	     this.rating = rating;

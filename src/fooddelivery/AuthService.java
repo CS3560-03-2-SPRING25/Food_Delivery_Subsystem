@@ -10,50 +10,23 @@ import model.Customer;
 import model.Driver;
 import model.RestaurantWorker;
 import model.User;
+import constants.UserRoles;
 
-public class AuthService {
-//	private final UserDAO userDAO = new UserDAO();
-//    private final DriverDAO driverDAO = new DriverDAO();
-//    private final CustomerDAO customerDAO = new CustomerDAO();
-//    private final RestaurantWorkerDAO workerDAO = new RestaurantWorkerDAO();
-    
-    public boolean signup(String name, String email, String phone, String password, String role) {
-//        boolean userCreated = userDAO.createUser(name, phone, email, password, role);
-//
-//        if (!userCreated) return false;
-//
-//        int userId = userDAO.getUserIdByEmail(email);  // You'll need to implement this method
-//        switch (role.toLowerCase()) {
-//            case "driver":
-//                Driver driver = Driver.newDriverForSignup(name, phone, email, password, "available");
-//                driverDAO.createDriver(driver, userId);
-//                break;
-//            case "customer":
-//                Customer customer = Customer.newCustomerForSignup(name, phone, email, password);
-//                customerDAO.createCustomer(customer, userId);
-//                break;
-//            case "restaurant_worker":
-//                RestaurantWorker worker = RestaurantWorker.newWorkerForSignup(name, phone, email, password);
-//                workerDAO.createRestaurantWorker(worker, userId);
-//                break;
-//            default:
-//                return false;
-//        }
-//
-//        return true;
-        
-		User user = null;
+public class AuthService {	
+    public boolean signup(String name, String phone, String email, String password, String role) {
+    	
+    	User user = null;
 		
-        if ("Driver".equalsIgnoreCase(role)) {
+        if (UserRoles.DRIVER.equalsIgnoreCase(role)) {
         	// TODO: status and assignedOrders list can be set by default in driver class??
         	user = Driver.newDriverForSignup(name, phone, email, password, "available", new ArrayList<Integer>());
-        } else if ("Customer".equalsIgnoreCase(role)) {
+        } else if (UserRoles.CUSTOMER.equalsIgnoreCase(role)) {
             user = Customer.newCustomerForSignup(name, phone, email, password);
-        } else if ("Restaurant_worker".equalsIgnoreCase(role)) {
+        } else if (UserRoles.RESTAURANT_WORKER.equalsIgnoreCase(role)) {
             user = RestaurantWorker.newRestaurantWorkerForSignup(name, phone, email, password);
         }
         
-        // Create User in DB
+     // Create User in DB
         UserDAO userDAO = new UserDAO();
         int userId  = userDAO.createUser(user); 
         
@@ -79,12 +52,50 @@ public class AuthService {
             System.out.println("User creation failed.");
             return false;
         }
+    	
+//    	 // Create User in DB
+//    	 User user = User.newUserForSignup(name, phone, email, password, role);
+//    	 UserDAO userDAO = new UserDAO();
+//    	 int userId  = userDAO.createUser(user); 
+////        int userCreated = UserDAO.createUser(user);
+//
+//        if (userId < 0) {
+//        	System.out.println("userId: " + userId);
+//        	System.out.println("User creation failed.");
+//        	return false;
+//        }
+//        
+//        // Set the generated user_id for the user object
+//        user.setUserId(userId);
+//       
+//        // After user is created, respective DAO inserts role-specific data
+//        switch (role.toLowerCase()) {
+//            case UserRoles.DRIVER:
+//            	// TODO: status and assignedOrders list can be set by default in driver class??
+//                Driver driver = Driver.newDriverForSignup(user.getName(), user.getPhoneNumber(), user.getEmail(), user.getPassword(), "available", new ArrayList<Integer>());
+//                DriverDAO driverDAO = new DriverDAO();
+//                driverDAO.createDriver((Driver) driver);
+//                break;
+//            case UserRoles.CUSTOMER:
+//                Customer customer = Customer.newCustomerForSignup(user.getName(), user.getPhoneNumber(), user.getEmail(), user.getPassword());
+//                CustomerDAO customerDAO = new CustomerDAO();
+//                customerDAO.createCustomer((Customer) customer);
+//                break;
+//            case UserRoles.RESTAURANT_WORKER:
+//                RestaurantWorker worker = RestaurantWorker.newRestaurantWorkerForSignup(user.getName(), user.getPhoneNumber(), user.getEmail(), user.getPassword());
+//                RestaurantWorkerDAO restaurantWorkerDAO = new RestaurantWorkerDAO();
+//                restaurantWorkerDAO.createRestaurantWorker((RestaurantWorker) worker);
+//                break;
+//            default:
+//                return false;
+//        }
+//        System.out.println("User created successfully!");
+//        return true;
+        
     }
 
     public User login(String email, String password) {
-//    	User user = null;
     	UserDAO userDAO = new UserDAO();
-//        int userId  = userDAO.createUser(user); 
         return userDAO.loginUser(email, password);  // This will return the right type based on role
     }
 }

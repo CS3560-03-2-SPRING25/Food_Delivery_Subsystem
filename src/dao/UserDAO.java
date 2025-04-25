@@ -6,12 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-//import java.util.List;
-import java.util.List;
 
+import constants.UserRoles;
 import fooddelivery.DBConnection;
 import model.Customer;
-import model.Driver;
 import model.RestaurantWorker;
 import model.User;
 
@@ -57,39 +55,40 @@ public class UserDAO {
 	        ResultSet rs = stmt.executeQuery();
 	    
 	        if (rs.next()) {
-	        	String role = rs.getString("role"); // check role
 	        	String storedHashedPassword = rs.getString("password");
-	        	
-//	            System.out.println(role);
-	        	// TODO: check email???
+	        	String storedEmail = rs.getString("email");
+
 	        	// Check if the provided password matches the stored hashed password
 	        	// BCrypt.checkpw(password, storedHashedPassword)
-                if (password.equals(storedHashedPassword)) { 
-                	  System.out.println("password matches!!!");
+                if (password.equals(storedHashedPassword) && email.equals(storedEmail)) { 
+                	
+                	// System.out.println("password and email matches!!!");
+    	        	String role = rs.getString("role"); // check role
                     int userId = rs.getInt("user_id");
                     String name = rs.getString("name");
                     String phone = rs.getString("phone_number");
 
                     switch (role.toLowerCase()) {
-                    case "driver":
-                    	String status = rs.getString("status");
-                    	double rating = rs.getDouble("rating");
-                    	// get driver from DB using id
-                    	List<Integer> assignedOrders = DriverDAO.getAssignedOrders(userId, conn);
-                        return Driver.existingDriverFromDB(userId, name, phone, email, password, status, assignedOrders, rating);
-                    case "customer":
+                    case UserRoles.DRIVER: 	
+                    	// get driver from DB using userId
+						try {
+							// TODO: using DriverDAO method here (inside of another DAO) may cause an issue
+							return DriverDAO.getDriverById(userId);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+                    case UserRoles.CUSTOMER:
                         return Customer.existingCustomerFromDB(userId, name, phone, email, password);
-                    case "restaurant_worker":
-                    	String shiftStatus = rs.getString("shift_status"); 
-//                        return RestaurantWorker.existingWorkerFromDB(userId, name, phone, email, password, shiftStatus);
+                    case UserRoles.RESTAURANT_WORKER:
+                        return RestaurantWorker.existingRestaurantWorkerFromDB(userId, name, phone, email, password);
                     default:
                         return null;
                     }
                     
-                    // do we need the password?
-                    // return new User(userId, name, phoneNumber, userEmail, storedHashedPassword);
                 } else {
+                	// FIXME: when credentials are not correct, the code skips this part for unknown reasons
                     System.out.println("Invalid Credentials.");
+            
                 }
                 
 	        }

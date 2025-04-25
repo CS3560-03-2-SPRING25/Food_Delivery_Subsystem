@@ -1,12 +1,14 @@
 package model;
 
+import constants.UserRoles;
+
 //Customer class extending User for placing orders
 public class Customer extends User {
 //	private String address;
  
 	//Constructor with password
 	 public Customer(int userId, String name, String phoneNumber, String email, String password) {
-	     super(userId, name, phoneNumber, email, password, "customer");
+	     super(userId, name, phoneNumber, email, password, UserRoles.CUSTOMER);
 //	     this.address = address;
 	 }
 

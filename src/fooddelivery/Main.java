@@ -1,16 +1,5 @@
 package fooddelivery;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
-import dao.CustomerDAO;
-import dao.DriverDAO;
-import dao.RestaurantWorkerDAO;
-import dao.UserDAO;
 import model.Customer;
 import model.Driver;
 import model.User;
@@ -19,31 +8,45 @@ import model.RestaurantWorker;
 public class Main {
 	public static void main(String[] args) {		
 
-//    	String name = "Restaurant Worker";
-//      String phone = "111-222-3333";
-//      String email = "restaurant.worker@gmail.com";
-//      String password = "workerPassword";
-//      String accountType = "Driver";  // based on user selection
+    	String name = "First5 Last5";
+      String phone = "111-222-3333";
+      String email = "driver5@example.com";
+      String password = "pass123";
+      String accountType = "driver";  // based on user selection: "driver" | "customer" | "restaurant_worker"
 //      String accountType = "Customer";  
 //      String accountType = "Restaurant_worker"; 
 		
 		AuthService authService = new AuthService();
+	
+        // Test Signup
+        boolean success = authService.signup(name, phone, email, password, accountType);
+        System.out.println(success ? "Signup success!" : "Signup failed.");
 
-        // Signup
-//        boolean success = authService.signup("Alex", "alex@example.com", "1234567890", "secret123", "driver");
-//        System.out.println(success ? "Signup success!" : "Signup failed.");
-
-//         Login
-        User user = authService.login("alex@example.com", "secret123");
-        if (user != null) {
-            System.out.println("Login success: " + user.getName());
-
-            if (user instanceof Driver) {
-                System.out.println("Welcome, driver!");
-            }
-        } else {
-            System.out.println("Login failed.");
-        }
+//        Test Login
+//        User user = authService.login(email, password);
+//        if (user != null) {
+//            System.out.println("Login success: " + user.getName());
+//            System.out.println("user role: " + user.getRole());
+//            if (user instanceof Driver) { // or user.getRole() == 'driver'
+//            	// open driver's page
+//            	System.out.println("Welcome, driver!");
+//            }
+//            if (user instanceof Customer) { // or user.getRole() == 'customer'
+//            	// open customer's page
+//                System.out.println("Welcome, customer!");
+//            }
+//            if (user instanceof RestaurantWorker) { // or user.getRole() == 'restaurant_worker'
+//            	// open worker's page
+//                System.out.println("Welcome, Restaurant Worker!");
+//            }
+//   
+//	            SessionManager.setCurrentUser(user);
+//	            System.out.println("Login success: " + user.getName());
+//        SessionManager.setCurrentUser(user, user.getRole());
+//        
+//        } else {
+//            System.out.println("Login failed.");
+//        }
 		
 	}
 

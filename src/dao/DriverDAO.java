@@ -29,9 +29,9 @@ public class DriverDAO {
 	}
 
 
-    public Driver getDriverById(int driverId) {
+    public static Driver getDriverById(int driverId) {
         Driver driver = null;
-        String query = "SELECT u.user_id, u.name, u.phone_number, u.email, d.status, d.rating " +
+        String query = "SELECT u.user_id, u.name, u.phone_number, u.email, u.password, d.status, d.rating " +
                        "FROM users u JOIN drivers d ON u.user_id = d.driver_id WHERE d.driver_id = ?";
 
         try (Connection conn = DBConnection.getConnection();
@@ -44,12 +44,12 @@ public class DriverDAO {
                 String name = rs.getString("name");
                 String phone = rs.getString("phone_number");
                 String email = rs.getString("email");
+                String password = rs.getString("password");
                 String status = rs.getString("status");
                 double rating = rs.getDouble("rating");
-
                 List<Integer> assignedOrders = getAssignedOrders(driverId, conn);
-                
-//                driver = new Driver(userId, name, phone, email, status, assignedOrders, rating);
+        
+                driver = Driver.existingDriverFromDB(userId, name, phone, email, password, status, assignedOrders, rating);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -93,7 +93,7 @@ public class DriverDAO {
     
     public List<Driver> getAvailableDrivers() {
         List<Driver> availableDrivers = new ArrayList<>();
-        String query = "SELECT u.user_id, u.name, u.phone_number, u.email, d.status, d.rating " +
+        String query = "SELECT u.user_id, u.name, u.phone_number, u.email, u.password, d.status, d.rating " +
                        "FROM users u JOIN drivers d ON u.user_id = d.driver_id " +
                        "WHERE d.status = 'available'";
 
@@ -106,13 +106,14 @@ public class DriverDAO {
                 String name = rs.getString("name");
                 String phone = rs.getString("phone_number");
                 String email = rs.getString("email");
+                String password = rs.getString("password");
                 String status = rs.getString("status");
                 double rating = rs.getDouble("rating");
-
+                
                 List<Integer> assignedOrders = getAssignedOrders(id, conn);
-
-//                Driver driver = new Driver(id, name, phone, email, status, assignedOrders, rating);
-//                availableDrivers.add(driver);
+              
+                Driver driver = Driver.existingDriverFromDB(id, name, phone, email, password, status, assignedOrders, rating);
+                availableDrivers.add(driver);
             }
         } catch (SQLException e) {
             e.printStackTrace();

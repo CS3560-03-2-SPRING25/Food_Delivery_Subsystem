@@ -18,7 +18,7 @@ public class User {
 	}
 	
 	// Static Factory Method
-	private User(String name, String email, String phoneNumber, String password, String role) {
+	public User(String name, String email, String phoneNumber, String password, String role) {
         this(0, name, email, phoneNumber, password, role); // 0 or a placeholder for new users
     }
 	

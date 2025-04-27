@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import constants.DriverStatus;
 import fooddelivery.DBConnection;
 
 public class DriverDAO {
@@ -29,7 +30,7 @@ public class DriverDAO {
 	}
 
 
-    public static Driver getDriverById(int driverId) {
+    public Driver getDriverById(int driverId) {
         Driver driver = null;
         String query = "SELECT u.user_id, u.name, u.phone_number, u.email, u.password, d.status, d.rating " +
                        "FROM users u JOIN drivers d ON u.user_id = d.driver_id WHERE d.driver_id = ?";
@@ -87,39 +88,64 @@ public class DriverDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
+        return false;
     }
     
-    public List<Driver> getAvailableDrivers() {
-        List<Driver> availableDrivers = new ArrayList<>();
-        String query = "SELECT u.user_id, u.name, u.phone_number, u.email, u.password, d.status, d.rating " +
-                       "FROM users u JOIN drivers d ON u.user_id = d.driver_id " +
-                       "WHERE d.status = 'available'";
+//    public static List<Driver> getAvailableDrivers() {
+//        List<Driver> availableDrivers = new ArrayList<>();
+//        String query = "SELECT u.user_id, u.name, u.phone_number, u.email, u.password, d.status, d.rating " +
+//                       "FROM users u JOIN drivers d ON u.user_id = d.driver_id " +
+//                       "WHERE d.status = 'available'";
+//
+//        try (Connection conn = DBConnection.getConnection();
+//             PreparedStatement stmt = conn.prepareStatement(query);
+//             ResultSet rs = stmt.executeQuery()) {
+//
+//            while (rs.next()) {
+//                int id = rs.getInt("user_id");
+//                String name = rs.getString("name");
+//                String phone = rs.getString("phone_number");
+//                String email = rs.getString("email");
+//                String password = rs.getString("password");
+//                String status = rs.getString("status");
+//                double rating = rs.getDouble("rating");
+//                
+//                List<Integer> assignedOrders = getAssignedOrders(id, conn);
+//              
+//                Driver driver = Driver.existingDriverFromDB(id, name, phone, email, password, status, assignedOrders, rating);
+//                availableDrivers.add(driver);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return availableDrivers;
+//    }
+    
+    public Driver findAvailableDriver() {
+        String sql = "SELECT * FROM drivers WHERE status = ? LIMIT 1";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            while (rs.next()) {
-                int id = rs.getInt("user_id");
-                String name = rs.getString("name");
-                String phone = rs.getString("phone_number");
-                String email = rs.getString("email");
-                String password = rs.getString("password");
-                String status = rs.getString("status");
-                double rating = rs.getDouble("rating");
-                
-                List<Integer> assignedOrders = getAssignedOrders(id, conn);
-              
-                Driver driver = Driver.existingDriverFromDB(id, name, phone, email, password, status, assignedOrders, rating);
-                availableDrivers.add(driver);
+            stmt.setString(1, DriverStatus.AVAILABLE);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new Driver(
+                    rs.getInt("driver_id"),
+                    "", "", "", "",
+                    rs.getString("status"),
+                    new ArrayList<>(),
+                    rs.getDouble("rating")
+                );
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return availableDrivers;
+        return null;
     }
 
 

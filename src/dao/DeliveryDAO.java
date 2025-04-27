@@ -47,7 +47,7 @@ public class DeliveryDAO {
         return false;
     }
     
- // Get a delivery by its ID
+    // Get a delivery by its ID
     public Delivery getDeliveryById(int deliveryId) {
         String query = "SELECT * FROM deliveries WHERE delivery_id = ?";
         Delivery delivery = null;

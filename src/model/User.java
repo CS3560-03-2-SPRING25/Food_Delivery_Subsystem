@@ -18,18 +18,18 @@ public class User {
 	}
 	
 	// Static Factory Method
-	public User(String name, String email, String phoneNumber, String password, String role) {
-        this(0, name, email, phoneNumber, password, role); // 0 or a placeholder for new users
+	public User(String name, String phoneNumber, String email, String password, String role) {
+        this(0, name, phoneNumber, email, password, role); // 0 or a placeholder for new users
     }
 	
 	// Static Factory Method
-    public static User newUserForSignup(String name, String email, String phoneNumber, String password, String role) {
-        return new User(name, email, phoneNumber, password, role);
+    public static User newUserForSignup(String name, String phoneNumber, String email, String password, String role) {
+        return new User(name, phoneNumber, email, password, role);
     }
     
 	// Static Factory Method
-    public static User existingUserFromDB(int userId, String name, String email, String phoneNumber, String password, String role) {
-        return new User(userId, name, email, phoneNumber, password, role);
+    public static User existingUserFromDB(int userId, String name, String phoneNumber, String email, String password, String role) {
+        return new User(userId, name, phoneNumber, email, password, role);
     }
 	 
 	 public int getUserId() {

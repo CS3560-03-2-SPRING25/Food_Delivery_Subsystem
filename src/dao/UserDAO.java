@@ -73,7 +73,8 @@ public class UserDAO {
                     	// get driver from DB using userId
 						try {
 							// TODO: using DriverDAO method here (inside of another DAO) may cause an issue
-							return DriverDAO.getDriverById(userId);
+							DriverDAO driverDAO = new DriverDAO();
+							return driverDAO.getDriverById(userId);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

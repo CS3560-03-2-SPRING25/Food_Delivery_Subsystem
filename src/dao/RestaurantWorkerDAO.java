@@ -24,7 +24,7 @@ public class RestaurantWorkerDAO {
 	    }
 	}
 	
-	public static RestaurantWorker getRestWorkerById(int workerId) {
+	public RestaurantWorker getRestWorkerById(int workerId) {
 		RestaurantWorker worker = null;
         String query = "SELECT u.user_id, u.name, u.phone_number, u.email, u.password, rw.shift_status " +
                        "FROM users u JOIN restaurant_workers rw ON u.user_id = rw.worker_id WHERE rw.worker_id = ?";

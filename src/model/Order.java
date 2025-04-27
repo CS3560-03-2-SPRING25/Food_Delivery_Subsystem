@@ -1,40 +1,59 @@
 package model;
 
 import java.time.LocalDateTime;
-import java.util.List;
+
+import constants.OrderStatus;
 
 //Order class representing a food order
 public class Order {
- private int orderId;
- private List<String> orderItems;
- private LocalDateTime orderTime;
- private String orderStatus;
- 
- public Order(int orderId, List<String> orderItems, LocalDateTime orderTime, String orderStatus) {
-     this.orderId = orderId;
-     this.orderItems = orderItems;
-     this.orderTime = orderTime;
-     this.orderStatus = orderStatus;
- }
- 
- public int getOrderId() {
-     return orderId;
- }
+	 private int orderId;
+	 private int customerId;
+	 private Integer driverId;
+	 private LocalDateTime orderTime;
+	 private String orderStatus;
+	 
+	 public Order(int orderId, int customerId, Integer driverId, LocalDateTime orderTime, String orderStatus) {
+		 this.orderId = orderId;
+		 this.customerId = customerId;
+		 this.driverId = driverId;
+		 this.orderTime = orderTime;
+		 this.orderStatus = orderStatus;
+	 }
+	 
+	 public static Order newOrderForCustomer(int customerId) {
+	        return new Order(0, customerId, null, LocalDateTime.now(), OrderStatus.PENDING);
+	    }
+	 
+	 public int getOrderId() {
+	     return orderId;
+	 }
+	
+	 public LocalDateTime getOrderTime() {
+	     return orderTime;
+	 }
+	
+	 public String getOrderStatus() {
+	     return orderStatus;
+	 }
+	
+	 public void setOrderStatus(String orderStatus) {
+	     this.orderStatus = orderStatus;
+	 }
 
- public List<String> getOrderItems() {
-     return orderItems;
- }
+	public int getCustomerId() {
+		return customerId;
+	}
 
- public LocalDateTime getOrderTime() {
-     return orderTime;
- }
+	public void setCustomerId(int customerId) {
+		this.customerId = customerId;
+	}
 
- public String getOrderStatus() {
-     return orderStatus;
- }
+	public Integer getDriverId() {
+		return driverId;
+	}
 
- public void setOrderStatus(String orderStatus) {
-     this.orderStatus = orderStatus;
- }
+	public void setDriverId(Integer driverId) {
+		this.driverId = driverId;
+	}
 
 }

@@ -14,13 +14,12 @@ import fooddelivery.DBConnection;
 public class DriverDAO {
 	
 	public boolean createDriver(Driver driver) {
-	    String query = "INSERT INTO drivers (driver_id, status, rating) VALUES (?, ?, ?)";
+	    String query = "INSERT INTO drivers (driver_id, status) VALUES (?, ?, ?)";
 	    try (Connection conn = DBConnection.getConnection();
 	         PreparedStatement stmt = conn.prepareStatement(query)) {
 
 	        stmt.setInt(1, driver.getUserId()); // Assuming userId is already set
 	        stmt.setString(2, driver.getStatus());
-	        stmt.setDouble(3, driver.getRating());
 
 	        return stmt.executeUpdate() > 0;
 	    } catch (SQLException e) {
@@ -32,7 +31,7 @@ public class DriverDAO {
 
     public Driver getDriverById(int driverId) {
         Driver driver = null;
-        String query = "SELECT u.user_id, u.name, u.phone_number, u.email, u.password, d.status, d.rating " +
+        String query = "SELECT u.user_id, u.name, u.phone_number, u.email, u.password, d.status " +
                        "FROM users u JOIN drivers d ON u.user_id = d.driver_id WHERE d.driver_id = ?";
 
         try (Connection conn = DBConnection.getConnection();
@@ -47,10 +46,9 @@ public class DriverDAO {
                 String email = rs.getString("email");
                 String password = rs.getString("password");
                 String status = rs.getString("status");
-                double rating = rs.getDouble("rating");
                 List<Integer> assignedOrders = getAssignedOrders(driverId, conn);
         
-                driver = Driver.existingDriverFromDB(userId, name, phone, email, password, status, assignedOrders, rating);
+                driver = Driver.existingDriverFromDB(userId, name, phone, email, password, status, assignedOrders);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -94,7 +92,7 @@ public class DriverDAO {
     
 //    public static List<Driver> getAvailableDrivers() {
 //        List<Driver> availableDrivers = new ArrayList<>();
-//        String query = "SELECT u.user_id, u.name, u.phone_number, u.email, u.password, d.status, d.rating " +
+//        String query = "SELECT u.user_id, u.name, u.phone_number, u.email, u.password, d.status " +
 //                       "FROM users u JOIN drivers d ON u.user_id = d.driver_id " +
 //                       "WHERE d.status = 'available'";
 //
@@ -109,11 +107,10 @@ public class DriverDAO {
 //                String email = rs.getString("email");
 //                String password = rs.getString("password");
 //                String status = rs.getString("status");
-//                double rating = rs.getDouble("rating");
 //                
 //                List<Integer> assignedOrders = getAssignedOrders(id, conn);
 //              
-//                Driver driver = Driver.existingDriverFromDB(id, name, phone, email, password, status, assignedOrders, rating);
+//                Driver driver = Driver.existingDriverFromDB(id, name, phone, email, password, status, assignedOrders);
 //                availableDrivers.add(driver);
 //            }
 //        } catch (SQLException e) {
@@ -137,8 +134,7 @@ public class DriverDAO {
                     rs.getInt("driver_id"),
                     "", "", "", "",
                     rs.getString("status"),
-                    new ArrayList<>(),
-                    rs.getDouble("rating")
+                    new ArrayList<>()
                 );
             }
 
@@ -147,6 +143,25 @@ public class DriverDAO {
         }
         return null;
     }
+    
+    public double getDriverAverageRating(int driverId) {
+        String sql = "SELECT AVG(rating) FROM reviews WHERE order_id IN (SELECT order_id FROM deliveries WHERE driver_id = ?)";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, driverId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getDouble(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0.0; // If no ratings found, return 0
+    }
+
 
 
 }

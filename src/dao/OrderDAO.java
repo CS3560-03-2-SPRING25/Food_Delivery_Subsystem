@@ -150,6 +150,22 @@ public class OrderDAO {
         }
         return false;
     }
+    
+    public boolean updateOrderStatus(int orderId, String status) {
+        String query = "UPDATE orders SET status = ? WHERE order_id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, status);
+            stmt.setInt(2, orderId);
+            return stmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 
 }

@@ -10,23 +10,21 @@ import constants.UserRoles;
 public class Driver extends User {
 	 private String status;
 	 private List<Integer> assignedOrders;
-	 private double rating;
 	 
-	 public Driver(int userId, String name, String phoneNumber, String email, String password, String status, List<Integer> assignedOrders, double rating) {
+	 public Driver(int userId, String name, String phoneNumber, String email, String password, String status, List<Integer> assignedOrders) {
 	     super(userId, name, phoneNumber, email, password, UserRoles.DRIVER);
 	     this.status = status;
 	     this.assignedOrders = assignedOrders;
-	     this.rating = rating;
 	 }
 	 
 	 // Static Factory Method
 	 public static Driver newDriverForSignup(String name, String phoneNumber, String email, String password, String status, List<Integer> assignedOrders) {
-	     return new Driver(0, name, phoneNumber, email, password, status, assignedOrders, 0.0);
+	     return new Driver(0, name, phoneNumber, email, password, status, assignedOrders);
 	 }
 	
 	 // Static Factory Method
-	 public static Driver existingDriverFromDB(int userId, String name, String phoneNumber, String email, String password, String status, List<Integer> assignedOrders, double rating) {
-	     return new Driver(userId, name, phoneNumber, email, password, status, assignedOrders, rating);
+	 public static Driver existingDriverFromDB(int userId, String name, String phoneNumber, String email, String password, String status, List<Integer> assignedOrders) {
+	     return new Driver(userId, name, phoneNumber, email, password, status, assignedOrders);
 	 }
 	
 	 public String getStatus() {
@@ -41,12 +39,5 @@ public class Driver extends User {
 		 return assignedOrders;
 	 }
 	 
-	 public double getRating() {
-	     return rating;
-	 }
-	
-	 public void setRating(double rating) {
-	     this.rating = rating;
-	 }
  
 }

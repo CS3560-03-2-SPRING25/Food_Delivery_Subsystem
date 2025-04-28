@@ -12,7 +12,6 @@ import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import mock.MockOrderData; //used mock data
 import model.Order;
-//import dao.DeliveryDAO;
 
 public class DriverUI {
     public void start(Stage stage, String username) {

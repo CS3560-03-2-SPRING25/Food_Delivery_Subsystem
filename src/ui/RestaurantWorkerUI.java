@@ -5,9 +5,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-// import mock.MockOrderData;
-// import model.Order; //used mock data
-//import dao.DeliveryDAO;
 
 public class RestaurantWorkerUI {
     public void start(Stage stage, String username) {

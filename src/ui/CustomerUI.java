@@ -57,7 +57,7 @@ public class CustomerUI {
                 System.out.println("Placing Order: " + foodItems + " to " + deliveryAddress);
 
                 // Mock behavior
-                orderResultLabel.setText("Order placed successfully! 🚚");
+                orderResultLabel.setText("Order placed successfully!");
 
                 // Clear the fields after placing order
                 foodItemsField.clear();

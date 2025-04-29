@@ -37,8 +37,8 @@ public class MockUserDAO {
         System.out.println("Password entered: " + password);
 
         for (User u : users) {
-            System.out.println("This is u: " + u);
             if (u.getEmail().equalsIgnoreCase(email) && u.getPassword().equals(password)) {
+                System.out.println("This is u: " + u);
                 System.out.println("Login successful: " + email);
                 return u;
             }

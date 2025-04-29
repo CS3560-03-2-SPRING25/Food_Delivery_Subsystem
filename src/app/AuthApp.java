@@ -53,7 +53,7 @@ public class AuthApp extends Application {
                 String role = loggedInUser.getRole();
                 // Opens the appropriate UI
                 // TODO: get username
-                String username = "Mandy"; // example
+                String username = loggedInUser.getName(); // example
                 openRoleWindow(role, username);
             } else {
                 errorLabel.setText("Invalid email or password.");

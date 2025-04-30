@@ -113,10 +113,10 @@ public class AuthApp extends Application {
                 
                 // Show success message or navigate
                 if (user_id > -1) {
+                    System.out.println("Error creating user.");
+                } else {
                     System.out.println("User successfully created!");
                     signUpMessage.setText("User created successfully!");
-                } else {
-                    System.out.println("Error creating user.");
                 }
             } else {
                 signUpMessage.setText("Please fill out all fields.");
